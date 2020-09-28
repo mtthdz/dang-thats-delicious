@@ -1,0 +1,60 @@
+const express = require('express');
+const router = express.Router();
+const storeController = require('../controllers/storeController');
+
+// Do work here
+// router.get('/', (req, res) => {
+//   res.send('Hey! It works!');
+// });
+
+// 2.4 notes
+// req is what we use to represent the data we want
+// res is response, self-explanatory
+// don't send data more than once
+// we can put variables by using a colon. i.e. router.get('/reverse/:variable', (req, res)...)
+// express docs has all this info 
+
+// 2.5 notes 
+// using pug for our templating engine (from jade)
+// templates go into the views folder
+// looks like we use views instead of react or something like that?
+// layout.pug is the overall layout, and our pug files extend on this
+
+// 2.6 notes
+// title will change the variable in layout.pug (line 4)
+// all helpers stuff goes into helpers.js
+// 02:45
+
+// router.get('/', (req, res) => {
+//   //how we render a view
+//   res.render('hello', {
+//     name: "wes",
+//     dog: req.query.dog,
+//     // title: "i love food"
+//   }) 
+
+//   res.render('hello')
+// })
+
+
+// 2.7 notes
+// MVC pattern: Model, View, Controller
+// model layer: fetching data from the database (via API)
+// view layer: templates (pug files)
+// controller layer: traffic cop, takes the model data and sends it into the view (templates)
+// separate controller folder
+// each functional part of the app will have its own controller
+
+// always use a separate controller to do all the work
+
+// router.get('/', storeController.homePage);
+
+// 2.8 notes
+// middleware is the work that happens between a request and a response 
+// i.e. login middleware would pull up a login form, and normalize the text entry, and verify
+// essentially an assembly line of tasks between the req and res 
+// this is route-specific middleware, whereas there is global middleware, which happens before router is (most of what app.js is; anything with app.use)
+
+router.get('/', storeController.myMiddleware, storeController.homePage);
+
+module.exports = router;
