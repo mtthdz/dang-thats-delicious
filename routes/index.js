@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const storeController = require('../controllers/storeController');
 
+module.exports = router;
+
+
 // Do work here
 // router.get('/', (req, res) => {
 //   res.send('Hey! It works!');
@@ -55,6 +58,5 @@ const storeController = require('../controllers/storeController');
 // essentially an assembly line of tasks between the req and res 
 // this is route-specific middleware, whereas there is global middleware, which happens before router is (most of what app.js is; anything with app.use)
 
-router.get('/', storeController.myMiddleware, storeController.homePage);
+// router.get('/', storeController.myMiddleware, storeController.homePage);
 
-module.exports = router;
