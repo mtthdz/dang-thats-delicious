@@ -1,17 +1,28 @@
 mixin storeForm(store = {})
-  form(action="/add" method="POST" class="card")
+  //- form action will make it so when we edit a store, it'll go to its ID, but if there is no ID it adds as a new store
+  form(action=`/add/${store._id || ''}` method="POST" class="card")
     label(for="name") Name
-    input(type="text" name="name")
-
+    input(type="text" name="name" value=store.name)
     label(for="description") Description
-    textarea(name="description")
+    textarea(name="description")= store.description
+    
+    //- address, lng and lat
+    label(for="address") Address
+    input(type="text", id="address" name="location[address]" value=(store.location && store.location.address))
+
+    label(for="lng") Address Lng
+    input(type="text" id="lng" name="location[coordinates][0]" value=(store.location && store.location.coordinates[0]) required)
+    label(for="lat") Address Lat
+    input(type="text" id="lat" name="location[coordinates][1]" value=(store.location && store.location.coordinates[1]) required)
+
     //- '-' runs js
     - const choices = ['Wifi', 'Open Late', 'Family Friendly', 'Vegatarian', "licensed"]
+    - const tags = store.tags || []
     //- 'each' is how you loop in pug
     ul.tags
       each choice in choices
         .tag.tag__choice 
-          input(type="checkbox" id=choice value=choice name="tags")
+          input(type="checkbox" id=choice value=choice name="tags" checked=(tags.includes(choice)))
           label(for=choice) #{choice}
     input(type="submit" value="save" class="button")
     
