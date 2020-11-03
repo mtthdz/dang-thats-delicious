@@ -54,4 +54,17 @@ storeSchema.pre('save', async function(next) {
   // TODO make more resiliant so slugs are unique 
 })
 
+// all static methods are bound to the store model
+// this means we can use regular functions to utilize "this"
+storeSchema.statics.getTagsList = function() {
+  return this.aggregate([
+    // $ is an operator within mongo
+    // $group will give us the amount of restaurants with the same tag
+    // $sort (-1) will descendingly sort tags
+    { $unwind: '$tags' },
+    { $group: { _id: '$tags', count: { $sum: 1} }},
+    { $sort: { count: -1 }}
+  ]);
+}
+
 module.exports = mongoose.model('Store', storeSchema);
