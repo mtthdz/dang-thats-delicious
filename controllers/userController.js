@@ -28,6 +28,7 @@ exports.validateRegister = (req, res, next) => {
   if(errors) {
     req.flash('error', errors.map(err => err.msg));
     res.render('register', { title: 'Register', body: req.body, flashes: req.flash() });
+    return; // stops fn from running
   }
-
+  next(); // no errors
 }
