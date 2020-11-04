@@ -25,6 +25,7 @@ const userSchema = new Schema({
 });
 
 // passport.js
+// exposes a method called .register, which does the lower level work for us
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 userSchema.plugin(mongodbErrorHandler);
 

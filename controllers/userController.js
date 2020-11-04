@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+// imported from start.js
+const User = mongoose.model('User');
+const promisify = require('es6-promisify');
 
 exports.loginForm = (req, res) => {
   res.render('login', { title: 'login' });
@@ -31,4 +34,14 @@ exports.validateRegister = (req, res, next) => {
     return; // stops fn from running
   }
   next(); // no errors
+}
+
+exports.register = async (req, res, next) => {
+  const user = new User({ email: req.body.email, name: req.body.name });
+  // promisify library doesn't have async methods
+  // so we'll write register method into a promise
+  // if method lives on an object, you have to pass the entire object (for promisify)
+  const register = promisify(User.register, User);
+  await register(user, req.body.password); // this will store password hash
+  next(); // pass to authController.login rather than use a res, since it's a check and redirect
 }
