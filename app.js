@@ -55,7 +55,8 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.h = helpers; // imported at top from helpers.js
   res.locals.flashes = req.flash();
-  res.locals.user = req.user || null;
+  // taking request via passport, passing user to local
+  res.locals.user = req.user || null; 
   res.locals.currentPath = req.path;
   next();
 });

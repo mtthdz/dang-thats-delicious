@@ -45,3 +45,25 @@ exports.register = async (req, res, next) => {
   await register(user, req.body.password); // this will store password hash
   next(); // pass to authController.login rather than use a res, since it's a check and redirect
 }
+
+exports.account = (req, res) => {
+  res.render('account', { title: 'Edit your account' });
+}
+
+exports.updateAccount = async (req, res) => {
+  const updates = {
+    // refer to user model
+    name: req.body.name,
+    email: req.body.email
+  }
+  // query, update, options
+  const user = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $set: updates },
+    // context is required for mongoose to do the query
+    { new: true, runValidators: true, context: 'query' }
+  );
+
+  req.flash('success', 'updated the profile!'); // why is flash a req method?
+  res.redirect('/account');
+}
