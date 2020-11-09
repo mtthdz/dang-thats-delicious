@@ -2,6 +2,7 @@
 // but use common js in the backend because nodeJS doesn't have es6 modules
 // webpack will however convert all js files to common js 
 import axios from 'axios';
+import dompurify from 'dompurify';
 
 function searchResultsHTML(stores) {
   return stores.map(store => {
@@ -36,11 +37,11 @@ function typeAhead(search) {
       .get(`/api/search?q=${this.value}`)
       .then(res => {
         if(res.data.length) {
-          searchResults.innerHTML = searchResultsHTML(res.data);
+          searchResults.innerHTML = dompurify.sanitize(searchResultsHTML(res.data));
           return;
         }
 
-        searchResults.innerHTML = `<div class="search__result">No results for ${this.value} found!</div>`
+        searchResults.innerHTML = dompurify.sanitize(`<div class="search__result">No results for ${this.value} found!</div>`);
       })
       .catch(err => {
         console.error(err);
