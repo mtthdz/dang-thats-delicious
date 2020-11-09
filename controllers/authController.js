@@ -71,6 +71,7 @@ exports.confirmedPasswords = (req, res, next) => {
   req.flash('error', 'Passwords do not match');
   res.redirect('back');
 }
+
 exports.update = async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
