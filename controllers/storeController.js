@@ -15,6 +15,7 @@ exports.addStore = (req, res) => {
 }
 
 exports.createStore = async (req, res) => {
+  req.body.author = req.user._id;
   const store = await (new Store(req.body)).save();
   req.flash('success', `successfully created ${store.name}. care to leave a review?`);
   res.redirect(`/store/${store.slug}`);
@@ -28,11 +29,17 @@ exports.getStores = async(req, res) => {
   res.render('stores', {title: 'Stores', stores});
 }
 
+const confirmOwner = (store, user) => {
+  if(!store.author.equals(user._id)) {
+    throw Error('You must own a store in order to edit it!');
+  }
+}
+
 exports.editStore = async(req, res) => {
   // 1. find store given the ID
   const store = await Store.findOne({_id: req.params.id});
   // 2. confirm they are the owner of the store
-  // todo
+  confirmOwner(store, req.user);
   // 3. render out the edit form so the user can update their store
   res.render('editStore', {title: `Edit ${store.name}`, store})
 }
@@ -60,7 +67,7 @@ exports.updateStore = async(req, res) => {
 }
 
 exports.getStoreBySlug = async(req, res, next) => {
-  const store = await Store.findOne({ slug: req.params.slug });
+  const store = await (await Store.findOne({ slug: req.params.slug })).populate('author');
   // if the slug isn't a store, return the 404 page
   // next is a middleware fn that'll go to the next fn, which will be the 404 fn
   if(!store) return next();
