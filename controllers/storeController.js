@@ -1,16 +1,12 @@
 const mongoose = require('mongoose');
 const Store = mongoose.model('Store');
 const User = mongoose.model('User');
-const multer = require('multer');
-const jimp = require('jimp');
-const uuid = require('uuid');
+// const multer = require('multer');
+// const jimp = require('jimp');
+// const uuid = require('uuid');
 
 exports.homePage = (req, res) => {
   console.log(req.name);
-  // req.flash('error', 'something happened');
-  // req.flash('info', 'something happened');
-  // req.flash('warning', 'something happened');
-  // req.flash('success', 'something happened');
   res.render('index');
 };
 
