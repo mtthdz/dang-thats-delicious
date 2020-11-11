@@ -1,6 +1,5 @@
-## What is this?
+## [Live site via Heroku](https://true-thats-delicious.herokuapp.com/)
 
-Just you wait folks!
 
 ## Sample Data
 
