@@ -85,6 +85,38 @@ storeSchema.statics.getTagsList = function() {
   ]);
 }
 
+storeSchema.statics.getTopStores = function() {
+  // aggregate is a query fn like .find() but more dynamic
+  return this.aggregate([
+    // lookup stores and populate their reviews
+      // note: mongoDB will take the name of your model (Review),
+      // lowercase it, add an -s (from: reviews)
+    { $lookup: { 
+      from: 'reviews', 
+      localField: '_id', 
+      foreignField: 'store', 
+      as: 'reviews' 
+    }},
+    
+    // filter for only items that have 2 or more reviews
+    {$match: { 'reviews.1': { $exists: true } }},
+    
+    // add the average reviews field
+    { $project: {
+      photo: '$$ROOT.photo',
+      name: '$$ROOT.name',
+      reviews: '$$ROOT.reviews',
+      averageRating: { $avg: '$reviews.rating' }
+    }},
+
+    // sort it by our new field, higest reviews, first
+    { $sort: { averageRating: -1 }},
+
+    // limit to at most 10
+    { $limit: 10 }
+  ])
+}
+
 // find reviews where the stores _id property === reviews store property
 // virtual fields do NOT go into either objects nor json unless explicitly stated
 // refer to line 44
