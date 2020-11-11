@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Store = mongoose.model('Store');
 const User = mongoose.model('User');
-// const multer = require('multer');
-// const jimp = require('jimp');
-// const uuid = require('uuid');
+const multer = require('multer');
+const jimp = require('jimp');
+const uuid = require('uuid');
 
 exports.homePage = (req, res) => {
   console.log(req.name);
@@ -66,7 +66,7 @@ exports.updateStore = async(req, res) => {
 }
 
 exports.getStoreBySlug = async(req, res, next) => {
-  const store = await (await Store.findOne({ slug: req.params.slug })).populate('author');
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author reviews');
   // if the slug isn't a store, return the 404 page
   // next is a middleware fn that'll go to the next fn, which will be the 404 fn
   if(!store) return next();
@@ -149,3 +149,9 @@ exports.getHearts = async(req, res) => {
 
   res.render('stores', { title: 'Hearted Stores', stores });
 };
+
+exports.getTopStores = async(req, res) => {
+  // always create a complex query on the model itself
+  const stores = await Store.getTopStores();
+  res.render('topStores', { stores, title: 'Top Stores!' });
+}
