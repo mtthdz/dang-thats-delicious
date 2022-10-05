@@ -1,4 +1,4 @@
-## [Live site via Heroku](https://true-thats-delicious.herokuapp.com/)
+This project is not currently live.
 
 
 ## Sample Data
